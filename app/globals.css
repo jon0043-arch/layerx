@@ -1,0 +1,392 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #020202;
+  color: white;
+  font-family: "Courier New", monospace;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: white;
+}
+
+.site {
+  min-height: 100svh;
+  position: relative;
+  overflow: hidden;
+  background: #020202;
+}
+
+/* HEADER */
+
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  padding: 35px 45px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  z-index: 10;
+}
+
+.logo {
+  font-family: Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 300;
+  letter-spacing: 0.5em;
+}
+
+.menu {
+  width: 40px;
+  height: 30px;
+
+  border: 0;
+  background: transparent;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+
+  gap: 9px;
+
+  cursor: pointer;
+}
+
+.menu span {
+  display: block;
+
+  height: 1px;
+
+  background: #aaa;
+}
+
+.menu span:first-child {
+  width: 35px;
+}
+
+.menu span:last-child {
+  width: 25px;
+}
+
+/* DOOR */
+
+.doorArea {
+  position: absolute;
+
+  right: 0;
+  top: 0;
+
+  width: 61%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.door {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  filter:
+    brightness(0.72)
+    contrast(1.15);
+
+  transform: scale(1.04);
+
+  transition:
+    transform 1.6s ease,
+    filter 1.6s ease;
+}
+
+.entered .door {
+  transform: scale(1.12);
+
+  filter:
+    brightness(0.9)
+    contrast(1.05);
+}
+
+/* HERO COPY */
+
+.content {
+  position: absolute;
+
+  left: 8vw;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  z-index: 5;
+}
+
+.tagline {
+  margin: 0 0 55px;
+
+  color: #c2c2c2;
+
+  font-size: clamp(13px, 1.1vw, 18px);
+
+  line-height: 1.9;
+
+  letter-spacing: 0.22em;
+}
+
+.enterButton {
+  border: 0;
+  border-bottom: 1px solid #555;
+
+  background: transparent;
+
+  padding: 0 0 14px;
+
+  letter-spacing: 0.35em;
+
+  cursor: pointer;
+}
+
+.enterButton span {
+  display: inline-block;
+
+  margin-left: 40px;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 25px;
+
+  transition: transform 0.25s ease;
+}
+
+.enterButton:hover span {
+  transform: translateX(7px);
+}
+
+/* REVEAL */
+
+.reveal {
+  animation: reveal 0.8s ease;
+}
+
+.small {
+  color: #888;
+
+  font-size: 11px;
+
+  letter-spacing: 0.27em;
+}
+
+.reveal h1 {
+  font-family: Arial, sans-serif;
+
+  font-size: clamp(38px, 4vw, 65px);
+
+  font-weight: 300;
+
+  letter-spacing: 0.13em;
+
+  line-height: 1.1;
+
+  margin: 20px 0 45px;
+}
+
+form label {
+  display: block;
+
+  color: #777;
+
+  font-size: 10px;
+
+  letter-spacing: 0.3em;
+
+  margin-bottom: 10px;
+}
+
+.email {
+  width: min(410px, 80vw);
+
+  display: flex;
+
+  border-bottom: 1px solid #555;
+}
+
+.email input {
+  flex: 1;
+
+  border: 0;
+  outline: 0;
+
+  padding: 14px 0;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 12px;
+
+  letter-spacing: 0.15em;
+}
+
+.email input::placeholder {
+  color: #666;
+}
+
+.email button {
+  width: 55px;
+
+  border: 0;
+
+  background: transparent;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 23px;
+
+  cursor: pointer;
+}
+
+.joined {
+  color: #aaa;
+
+  font-size: 12px;
+
+  letter-spacing: 0.25em;
+}
+
+/* FOOTER */
+
+footer {
+  position: absolute;
+
+  bottom: 28px;
+  left: 45px;
+
+  color: #555;
+
+  font-size: 9px;
+
+  letter-spacing: 0.25em;
+
+  z-index: 5;
+}
+
+@keyframes reveal {
+
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+
+  header {
+    padding: 32px 25px;
+  }
+
+  .logo {
+    font-size: 14px;
+    letter-spacing: 0.45em;
+  }
+
+  .doorArea {
+    width: 100%;
+
+    height: 70svh;
+
+    top: 12svh;
+  }
+
+  .door {
+    object-position: center;
+
+    transform: scale(1.06);
+  }
+
+  .entered .door {
+    transform: scale(1.14);
+  }
+
+  .content {
+    top: auto;
+
+    bottom: 8svh;
+
+    left: 0;
+
+    width: 100%;
+
+    padding: 0 25px;
+
+    transform: none;
+
+    text-align: center;
+  }
+
+  .tagline {
+    margin-bottom: 38px;
+
+    font-size: 11px;
+
+    letter-spacing: 0.18em;
+  }
+
+  .enterButton {
+    font-size: 12px;
+  }
+
+  .reveal {
+    padding: 25px 10px;
+
+    background:
+      linear-gradient(
+        transparent,
+        rgba(2, 2, 2, 0.95)
+      );
+  }
+
+  .small {
+    font-size: 9px;
+  }
+
+  .reveal h1 {
+    font-size: clamp(30px, 10vw, 44px);
+
+    margin-bottom: 30px;
+  }
+
+  .email {
+    width: 100%;
+  }
+
+  footer {
+    display: none;
+  }
+
+}
