@@ -324,7 +324,7 @@ footer {
   }
 
   .door {
-  object-position: 22% center;
+  object-position: -22% center;
 
 
     transform: scale(1.06);
