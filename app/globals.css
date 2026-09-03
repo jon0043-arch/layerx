@@ -6,7 +6,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #020202;
+  width: 100%;
+  min-height: 100%;
+  background: #000000;
   color: white;
   font-family: "Courier New", monospace;
 }
@@ -22,9 +24,10 @@ button {
 
 .site {
   min-height: 100svh;
+  width: 100%;
   position: relative;
   overflow: hidden;
-  background: #020202;
+  background: #000000;
 }
 
 /* HEADER */
@@ -33,14 +36,11 @@ header {
   position: absolute;
   top: 0;
   left: 0;
-
   width: 100%;
   padding: 35px 45px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   z-index: 10;
 }
 
@@ -54,25 +54,19 @@ header {
 .menu {
   width: 40px;
   height: 30px;
-
   border: 0;
   background: transparent;
-
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-
   gap: 9px;
-
   cursor: pointer;
 }
 
 .menu span {
   display: block;
-
   height: 1px;
-
   background: #aaa;
 }
 
@@ -88,22 +82,20 @@ header {
 
 .doorArea {
   position: absolute;
-
   right: 0;
   top: 0;
-
   width: 61%;
   height: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #000000;
+  overflow: hidden;
 }
 
 .door {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
   object-position: center;
 
@@ -130,49 +122,34 @@ header {
 
 .content {
   position: absolute;
-
   left: 8vw;
   top: 50%;
-
   transform: translateY(-50%);
-
   z-index: 5;
 }
 
 .tagline {
   margin: 0 0 55px;
-
   color: #c2c2c2;
-
   font-size: clamp(13px, 1.1vw, 18px);
-
   line-height: 1.9;
-
   letter-spacing: 0.22em;
 }
 
 .enterButton {
   border: 0;
   border-bottom: 1px solid #555;
-
   background: transparent;
-
   padding: 0 0 14px;
-
   letter-spacing: 0.35em;
-
   cursor: pointer;
 }
 
 .enterButton span {
   display: inline-block;
-
   margin-left: 40px;
-
   font-family: Arial, sans-serif;
-
   font-size: 25px;
-
   transition: transform 0.25s ease;
 }
 
@@ -188,60 +165,41 @@ header {
 
 .small {
   color: #888;
-
   font-size: 11px;
-
   letter-spacing: 0.27em;
 }
 
 .reveal h1 {
   font-family: Arial, sans-serif;
-
   font-size: clamp(38px, 4vw, 65px);
-
   font-weight: 300;
-
   letter-spacing: 0.13em;
-
   line-height: 1.1;
-
   margin: 20px 0 45px;
 }
 
 form label {
   display: block;
-
   color: #777;
-
   font-size: 10px;
-
   letter-spacing: 0.3em;
-
   margin-bottom: 10px;
 }
 
 .email {
   width: min(410px, 80vw);
-
   display: flex;
-
   border-bottom: 1px solid #555;
 }
 
 .email input {
   flex: 1;
-
   border: 0;
   outline: 0;
-
   padding: 14px 0;
-
   background: transparent;
-
   color: white;
-
   font-size: 12px;
-
   letter-spacing: 0.15em;
 }
 
@@ -251,23 +209,16 @@ form label {
 
 .email button {
   width: 55px;
-
   border: 0;
-
   background: transparent;
-
   font-family: Arial, sans-serif;
-
   font-size: 23px;
-
   cursor: pointer;
 }
 
 .joined {
   color: #aaa;
-
   font-size: 12px;
-
   letter-spacing: 0.25em;
 }
 
@@ -275,21 +226,15 @@ form label {
 
 footer {
   position: absolute;
-
   bottom: 28px;
   left: 45px;
-
   color: #555;
-
   font-size: 9px;
-
   letter-spacing: 0.25em;
-
   z-index: 5;
 }
 
 @keyframes reveal {
-
   from {
     opacity: 0;
     transform: translateY(15px);
@@ -299,13 +244,11 @@ footer {
     opacity: 1;
     transform: translateY(0);
   }
-
 }
 
 /* MOBILE */
 
 @media (max-width: 760px) {
-
   header {
     padding: 32px 25px;
   }
@@ -317,16 +260,12 @@ footer {
 
   .doorArea {
     width: 100%;
-
     height: 70svh;
-
     top: 12svh;
   }
 
   .door {
-  object-position: 60% center;
-
-
+    object-position: 60% center;
     transform: scale(1.06);
   }
 
@@ -336,25 +275,17 @@ footer {
 
   .content {
     top: auto;
-
     bottom: 8svh;
-
     left: 0;
-
     width: 100%;
-
     padding: 0 25px;
-
     transform: none;
-
     text-align: center;
   }
 
   .tagline {
     margin-bottom: 38px;
-
     font-size: 11px;
-
     letter-spacing: 0.18em;
   }
 
@@ -364,11 +295,10 @@ footer {
 
   .reveal {
     padding: 25px 10px;
-
     background:
       linear-gradient(
         transparent,
-        rgba(2, 2, 2, 0.95)
+        rgba(0, 0, 0, 0.95)
       );
   }
 
@@ -378,7 +308,6 @@ footer {
 
   .reveal h1 {
     font-size: clamp(30px, 10vw, 44px);
-
     margin-bottom: 30px;
   }
 
@@ -389,5 +318,4 @@ footer {
   footer {
     display: none;
   }
-
 }
