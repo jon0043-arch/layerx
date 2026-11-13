@@ -1,64 +1,79 @@
 # LAYER X
-**THE WORLD HAS ANOTHER LAYER. YOU JUST FOUND IT.**
 
-Layer X is a location-based augmented-reality platform for leaving digital content in physical places, then discovering it with another device. This repository retains the original cinematic black-and-white landing page and now contains an actual field-test product.
+**The world has another layer.**
 
-## What's included
+Layer X has two intentionally different experiences:
 
-| Component | Path | Works now |
-|---|---|---|
-| Original landing page | \`/\` | Existing marketing site, with an "OPEN THE WORLD" entry point |
-| Mobile browser field test | \`/world\` | Camera preview, GPS nearby discovery, drop text, local save, bookmarks, share links |
-| Shared layer REST API | \`/api/layers\` | Nearby reads + code-gated writes once Supabase variables are configured |
-| Supabase database | \`database/schema.sql\` | Geo-tagged text Layer storage with RLS locked down |
-| Native ARKit iPhone project | \`ios/\` | Surface detection, tap-to-place 3D text, GPS discovery and persistence client |
+- **Native iPhone AR (real spatial anchors)** — The iOS app uses ARKit plane detection, a tap raycast, and named ARAnchors to keep digital cards attached to physical 3D positions as you move. It can save an ARWorldMap to the device and attempt to restore those anchors on a later visit.
+- **Browser companion (/world)** — A redesigned GPS discovery and text-note experience. It is **not augmented reality** and does not show objects attached to a wall or surface.
 
-## Important truth about anchoring
+## What works in the native prototype
 
-- The **web camera** provides a camera-feed overlay and GPS discovery. It **does not** physically attach graphics to surfaces in 3D; this preview is clearly labeled.
-- The **native iPhone app** uses ARKit plane detection and raycasts to attach a 3D label to a real surface **during the current AR session**.
-- A layer published from one device can be discovered by another via its GPS coordinates, but is re-shown approximately in the second user's view. **Precise relocalization to the exact brick, wall, or object across separate phones is not solved yet.**
-- Precise persistent cross-device attachments require a separate localization system (e.g. supported ARGeoAnchors, visual positioning, or cloud anchors) and on-device testing.
+1. Camera-first, minimal interface, and dedicated Drop/Explore/Save Space controls.
+2. Write a title, message, and signature.
+3. Scan a wall, table, or floor, then tap the real surface to attach a 3D card using an ARAnchor.
+4. Walk around and see the anchored object remain in the physical location while ARKit tracking is successful.
+5. When the mapping status is ready, press **SAVE SPACE** to archive an ARWorldMap containing the anchors.
+6. Close and reopen the app in the **same room**, look around the previously scanned area, and allow ARKit to relocalize. The anchored cards can reappear at their original coordinates if relocalization succeeds.
+7. Start a new space from Settings if ARKit gets stuck trying to relocalize to an old place.
 
-## Run the browser app
+**Limitations:** Spatial persistence is on the same iPhone and only within a successfully relocalized saved environment. Precise cross-device wall/object attachments, user accounts, public content moderation, and an App Store build are **not implemented**. The native app is not remotely installable from a website.
 
-Prerequisites: Node.js 20+.
+## Build and install on your iPhone
 
-\`\`\`bash
-npm install
-npm run dev
-\`\`\`
+You need a Mac with Xcode installed, a physical iPhone that supports ARKit, and XcodeGen (the project is generated from `ios/project.yml`). You can sign the app with a personal development team for your own device.
 
-Visit \`http://localhost:3000/world\`. Camera APIs require HTTPS on a remote device; browsers allow localhost for development. Grant location and camera access. Without a configured Supabase project, Layers save to the browser's local storage **only on that device**.
-
-## Enable shared layers
-
-1. Create a Supabase project.
-2. Execute \`database/schema.sql\` in its SQL editor. It enables RLS and grants **no public table access**.
-3. Add \`SUPABASE_URL\`, \`SUPABASE_SERVICE_ROLE_KEY\`, and \`LAYERX_CREATE_ACCESS_CODE\` as **server-side** environment variables in Vercel. Keep the service role key secret; **never prefix it with NEXT_PUBLIC_**.
-4. Deploy the Next.js site with HTTPS. Reload \`/world\`, allow location, and enter the creation code when dropping a Layer. With the code, it is published and can appear on other devices within approximately 1.5km.
-5. Public discovery GET requests are read through the server API. Only someone with the field-test code may publish to the shared table.
-
-This access-code gate is for controlled testing, **not public launch**. Before public use, build accounts, reporting, moderation, deletion, per-user and IP rate limits, abuse prevention, and consent/privacy controls for sensitive physical locations.
-
-## Run the native ARKit iPhone app
-
-Requirements: a Mac with Xcode, [XcodeGen](https://github.com/yonaskolb/XcodeGen), and a compatible physical iPhone. ARKit world tracking does not run in the iOS Simulator.
-
-\`\`\`bash
-cd ios
+```bash
+git clone https://github.com/jon0043-arch/layerx.git
+cd layerx/ios
+brew install xcodegen
 xcodegen generate
 open LayerX.xcodeproj
-\`\`\`
+```
 
-Select your developer signing team in Xcode and run on your iPhone. Grant camera and location permissions.
+In Xcode select the **LayerX** target → **Signing & Capabilities**, choose your Apple development team, and if necessary change the bundle identifier to a unique value. Connect your iPhone, trust the computer and enable Developer Mode if prompted. Select the iPhone as the run destination and press **Run** (▶). Grant camera/location permissions when asked.
 
-The native app initially operates in local-only mode. In its **SETTINGS**, enter your HTTPS web deployment origin (e.g. \`https://your-project.vercel.app\`) and the publishing code if you want shared layers. A server URL alone enables discovery; creating a shared layer requires the code. Publishing code is held in memory during the app session, not written to device defaults.
+### Five-minute physical anchor test
 
-Flow: **DROP → write a title/message → POINT camera → TAP detected surface → leave a Layer → DISCOVER nearby**.
+1. Point your phone at a well-lit, textured wall or tabletop and move slowly while ARKit maps it.
+2. Press the center **+** button, enter a title and a note, then choose **POINT & PLACE**.
+3. Tap the real surface. The AR card should stay attached to that real position when you walk around it.
+4. Continue scanning the room until the bottom status says **READY TO SAVE**. Press **SAVE SPACE** and look for a success message.
+5. Close and reopen the app in the same room. Move around the same surfaces until tracking relocalizes. If it succeeds, your card should return in the same physical place.
 
-## MVP boundaries
+Real AR tracking and successful relocalization **must be verified on-device**. Code compilation alone cannot prove spatial stability.
 
-Version 0.1 supports text Layers and user-provided signatures. It does **not** yet support production authentication, photo/video/3D uploads, comments, likes, profiles, precise visual localization, permanent AR world maps, or a public App Store distribution.
+## Build checks
 
-The code has been committed to GitHub but must still be compiled and tested on a real iPhone. This environment cannot run Xcode or verify ARKit tracking on hardware.
+- GitHub Actions `.github/workflows/ios-build.yml` compiles the native app with Xcode on a macOS runner.
+- `.github/workflows/build.yml` verifies the Next.js website.
+- App code: `ios/LayerX/LayerXApp.swift`, `ARCameraView.swift`, `SpatialStore.swift`, and `LayerModel.swift`.
+
+## Browser companion
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000/world`. The companion shows local GPS Layers, lets you create device-local notes, and has a nearby radar. It intentionally does **not** show a fake camera-based AR overlay. The live deployment, when configured, uses HTTPS.
+
+## Optional shared GPS notes
+
+The `app/api/layers/route.js` API can connect to Supabase for controlled geo-tagged text notes. Run `database/schema.sql` in your Supabase SQL editor and configure these **server-only** environment variables:
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `LAYERX_CREATE_ACCESS_CODE`
+
+Never put the service role key in public frontend code. The access code is for private field testing only, not launch-grade authentication. Before inviting public users, add authentication, moderation, reporting, removal, rate limiting, and location privacy controls.
+
+Shared notes are **approximate GPS content**, not cross-device spatial anchors.
+
+## Engineering roadmap
+
+- Native 3D interactions, anchored media and audio.
+- A place/space selection flow for multiple environments; current version stores a single active local world map.
+- Reliable, privacy-aware cross-device localization: shared world maps, supported geo anchors, or visual-positioning methods as appropriate, tested in the environments where they'll be used.
+- Accounts, abuse prevention, permissions, and sharing.
+- TestFlight distribution after native QA and Apple signing setup.
