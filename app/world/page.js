@@ -206,6 +206,27 @@ export default function LayerXWorld() {
 
       {tab === "discover" && (
         <section className="lx-list">
+          <div className="lx-radar">
+            <div className="lx-radar-header"><span>◇ GEOSPATIAL FIELD / 1.5KM</span><span>{layers.length} SIGNAL{layers.length === 1 ? "" : "S"}</span></div>
+            <div className="lx-radar-circle lx-ring-one" /><div className="lx-radar-circle lx-ring-two" /><div className="lx-radar-circle lx-ring-three" />
+            <div className="lx-radar-cross lx-radar-cross-x" /><div className="lx-radar-cross lx-radar-cross-y" />
+            <div className="lx-radar-center" title="Your location" />
+            {position && layers.map(layer => {
+              const scale = 46 / 1500;
+              const dx = (layer.longitude - position.longitude) * 111320 * Math.cos(position.latitude * Math.PI / 180) * scale;
+              const dy = (position.latitude - layer.latitude) * 111320 * scale;
+              return (
+                <button key={layer.id} className={"lx-radar-point " + (selected === layer.id ? "active" : "")}
+                  style={{ left: (50 + dx) + "%", top: (50 + dy) + "%" }}
+                  title={layer.title + (layer.meters !== null ? " · " + formatDistance(layer.meters) : "")}
+                  aria-label={"Open " + layer.title}
+                  onClick={() => { setSelected(layer.id); setMapExpanded(true); }}>◆</button>
+              );
+            })}
+            {!position && <button className="lx-radar-permission" onClick={locate}>ENABLE LOCATION TO ACTIVATE RADAR ↗</button>}
+            <span className="lx-radar-north">N</span>
+            <span className="lx-radar-scale">RADIUS 1.5KM · NORTH UP</span>
+          </div>
           {layers.length === 0 ? <div className="lx-zero"><span>000</span><h2>NO SIGNALS FOUND.</h2><p>Every place begins empty. Someone has to leave the first Layer.</p><button onClick={() => setTab("drop")}>CREATE THE FIRST ONE ↗</button></div> :
           layers.map(l => <button key={l.id} className="lx-result" onClick={() => { setSelected(l.id); setMapExpanded(true); }}>
             <div className="lx-result-index">{l.source === "shared" ? "◈" : "◇"}</div>
@@ -223,6 +244,7 @@ export default function LayerXWorld() {
             <label>WHAT WILL PEOPLE DISCOVER? <textarea required maxLength={280} minLength={2} rows={4} placeholder="Leave a thought, a memory, a secret, a story..." value={form.message} onChange={e => updateForm("message", e.target.value)} /></label>
             <label>YOUR SIGNATURE <input maxLength={32} placeholder="ANONYMOUS" value={form.creator} onChange={e => updateForm("creator", e.target.value)} /></label>
             {mode === "live" && <label>FIELD TEST PUBLISH CODE (OPTIONAL) <input type="password" autoComplete="off" placeholder="FOR SHARED LAYERS" value={form.code} onChange={e => updateForm("code", e.target.value)} /></label>}
+            <p className="lx-privacy">PUBLIC LAYERS INCLUDE APPROXIMATE PLACE COORDINATES. AVOID PRIVATE ADDRESSES OR SENSITIVE LOCATIONS.</p>
             <div className="lx-location-line"><span>LOCATION ANCHOR</span><strong>{position ? position.latitude.toFixed(5) + "°, " + position.longitude.toFixed(5) + "°" : "NOT ACQUIRED"}</strong></div>
             <button type="button" className="lx-locate-inline" onClick={locate}>{position ? "↻ UPDATE POSITION" : "⌖ ENABLE LOCATION"}</button>
             <button type="submit" className="lx-primary" disabled={busy || !position}>{busy ? "PLACING..." : "DROP LAYER ↗"}</button>
