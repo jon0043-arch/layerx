@@ -177,30 +177,41 @@ export default function LayerXWorld() {
 
       <div className="lx-headline">
         <div className="lx-kicker">THE WORLD HAS ANOTHER LAYER.</div>
-        <h1>{tab === "scan" ? "SEE THE INVISIBLE." : tab === "discover" ? "WHAT'S OUT THERE." : tab === "drop" ? "LEAVE YOUR MARK." : "YOUR COLLECTION."}</h1>
-        <p>{tab === "scan" ? "Point your camera. Find something left behind." : tab === "drop" ? "Attach a message to the place where you're standing." : "Digital traces attached to real places."}</p>
+        <h1>{tab === "scan" ? "THE INVISIBLE WORLD." : tab === "discover" ? "WHAT'S OUT THERE." : tab === "drop" ? "LEAVE YOUR MARK." : "YOUR COLLECTION."}</h1>
+        <p>{tab === "scan" ? "The web companion. Real surface anchoring is in the iPhone build." : tab === "drop" ? "Attach a message to the place where you're standing." : "Digital traces attached to real places."}</p>
       </div>
 
       {tab === "scan" && (
-        <section className={"lx-viewport " + (cameraOn ? "lx-camera-on" : "")}>
-          {cameraOn && <video ref={videoRef} autoPlay muted playsInline className="lx-video" />}
-          {!cameraOn && <div className="lx-ambient"><div className="lx-orb" /></div>}
-          <div className="lx-corner top-left" /><div className="lx-corner top-right" />
-          <div className="lx-corner bottom-left" /><div className="lx-corner bottom-right" />
-          <div className="lx-vtop"><span>LIVE SCAN</span><span>{position ? "GPS ±" + Math.round(position.accuracy) + "M" : "LOCATION OFFLINE"}</span></div>
-          <div className="lx-crosshair"><span /><span /></div>
-          {active && (
-            <div className="lx-signal" role="button" tabIndex={0} onClick={() => setMapExpanded(true)} onKeyDown={e => e.key === "Enter" && setMapExpanded(true)}>
-              <div className="lx-signal-eyebrow">◆ SIGNAL DETECTED / {active.meters !== null ? formatDistance(active.meters) : "LOCAL"}</div>
-              <strong>{active.title}</strong>
-              <p>{active.message}</p>
-              <div className="lx-signal-foot">LEFT BY {active.creator || "ANONYMOUS"} <span>VIEW DETAILS ↗</span></div>
+        <section className="lx-field">
+          <div className="lx-field-inner">
+            <div className="lx-field-upper">
+              <span><span className="lx-field-live" /> WORLD INDEX / V0.2</span>
+              <span>{position ? "POSITION LOCKED" : "POSITION UNKNOWN"}</span>
             </div>
-          )}
-          {!active && <div className="lx-empty"><div className="lx-empty-star">✳</div><strong>NOTHING HERE. YET.</strong><span>BE THE FIRST TO LEAVE A LAYER.</span></div>}
-          <div className="lx-vbottom"><span>GPS-BASED PREVIEW · NOT PRECISE AR ANCHORING</span><span>{layers.length.toString().padStart(2,"0")} SIGNALS</span></div>
-          {!cameraOn && <button className="lx-enable" onClick={() => setCameraOn(true)}>ENABLE CAMERA <span>↗</span></button>}
-          {!!cameraError && <div className="lx-error">{cameraError}</div>}
+            <div className="lx-field-orb">
+              <div className="lx-field-orbit lx-orbit-1" />
+              <div className="lx-field-orbit lx-orbit-2" />
+              <div className="lx-field-orbit lx-orbit-3" />
+              <div className="lx-field-cross-x" />
+              <div className="lx-field-cross-y" />
+              <div className="lx-field-axis">X</div>
+              <div className="lx-field-beam" />
+            </div>
+            <div className="lx-field-copy">
+              <div className="lx-kicker">YOUR WORLD IS WAITING.</div>
+              <h2>NOTHING IS<br/>EVER REALLY EMPTY.</h2>
+              <p>Discover messages tied to real places, or leave one behind.</p>
+              <div className="lx-field-actions">
+                <button onClick={() => { locate(); setTab("discover"); }}>EXPLORE NEARBY <span>↗</span></button>
+                <button onClick={() => { locate(); setTab("drop"); }}>DROP A LAYER <span>＋</span></button>
+              </div>
+            </div>
+          </div>
+          <div className="lx-field-warning">
+            <span>WEB COMPANION / GPS DISCOVERY ONLY</span>
+            <p>True wall and surface anchors run in the separate native iPhone ARKit prototype. This browser view cannot fix a 3D object to a surface.</p>
+            <a href="https://github.com/jon0043-arch/layerx/tree/main/ios" target="_blank" rel="noreferrer">VIEW REAL AR BUILD ↗</a>
+          </div>
         </section>
       )}
 
@@ -269,7 +280,7 @@ export default function LayerXWorld() {
       {!!locationError && <div className="lx-alert">{locationError}</div>}
       {!!notice && <button className="lx-alert" onClick={() => setNotice("")}>{notice} ×</button>}
       <nav className="lx-nav" aria-label="World navigation">
-        {[["scan", "⌖", "SCAN"], ["discover", "▦", "DISCOVER"], ["drop", "+", "DROP"], ["saved", "◇", "SAVED"]].map(([id, glyph, label]) =>
+        {[["scan", "⌖", "FIELD"], ["discover", "▦", "DISCOVER"], ["drop", "+", "DROP"], ["saved", "◇", "SAVED"]].map(([id, glyph, label]) =>
           <button key={id} className={tab === id ? "active" : ""} onClick={() => { setTab(id); setMapExpanded(false); }}><span>{glyph}</span>{label}</button>)}
       </nav>
 
