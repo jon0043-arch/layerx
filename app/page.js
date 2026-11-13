@@ -71,6 +71,8 @@ export default function Home() {
               FIRST LAYER.
             </h1>
 
+            <a href="/world" className="fieldTestLink">OPEN THE WORLD / FIELD TEST ↗</a>
+
             {!joined ? (
               <form onSubmit={joinWaitlist}>
 
