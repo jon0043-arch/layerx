@@ -44,7 +44,12 @@ export default function LayerXWorld() {
   useEffect(() => {
     if (!cameraOn || tab !== "scan") return;
     let cancelled = false;
-    navigator.mediaDevices?.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false })
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError("CAMERA REQUIRES A SECURE CONNECTION AND SUPPORTED BROWSER");
+      setCameraOn(false);
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false })
       .then(stream => {
         if (cancelled) { stream.getTracks().forEach(t => t.stop()); return; }
         streamRef.current = stream;
