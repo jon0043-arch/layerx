@@ -80,7 +80,7 @@ struct ARCameraView: UIViewRepresentable {
             return layerIndex[name]
         }
 
-        func startSession(restore: Bool) {
+        @MainActor func startSession(restore: Bool) {
             guard let view = sceneView, ARWorldTrackingConfiguration.isSupported else { return }
             let configuration = ARWorldTrackingConfiguration()
             configuration.planeDetection = [.horizontal, .vertical]
@@ -94,7 +94,7 @@ struct ARCameraView: UIViewRepresentable {
             view.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
         }
 
-        @objc func place(_ recognizer: UITapGestureRecognizer) {
+        @MainActor @objc func place(_ recognizer: UITapGestureRecognizer) {
             guard let draft else { return }
             guard let view = sceneView else { return }
             let point = recognizer.location(in: view)
@@ -114,7 +114,7 @@ struct ARCameraView: UIViewRepresentable {
             onPlaced(layer)
         }
 
-        func saveMap() {
+        @MainActor func saveMap() {
             guard let view = sceneView else { return }
             guard !spatial.layers.isEmpty else {
                 spatial.message = "PLACE A LAYER BEFORE SAVING THIS SPACE."
